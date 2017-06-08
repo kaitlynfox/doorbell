@@ -59,12 +59,12 @@ public class DoorbellActivity extends Activity {
     /**
      * An additional thread for running Camera tasks that shouldn't block the UI.
      */
-    private HandlerThread mCameraThread;
+    private HandlerThread cameraThread;
 
     /**
      * A {@link Handler} for running Cloud tasks in the background.
      */
-    private Handler mCloudHandler;
+    private Handler cloudHandler;
 
     /**
      * An additional thread for running Cloud tasks that shouldn't block the UI.
@@ -93,13 +93,13 @@ public class DoorbellActivity extends Activity {
         mDatabase = FirebaseDatabase.getInstance();
 
         // Creates new handlers and associated threads for camera and networking operations.
-        mCameraThread = new HandlerThread("CameraBackground");
-        mCameraThread.start();
-        mCameraHandler = new Handler(mCameraThread.getLooper());
+        cameraThread = new HandlerThread("CameraBackground");
+        cameraThread.start();
+        mCameraHandler = new Handler(cameraThread.getLooper());
 
         mCloudThread = new HandlerThread("CloudThread");
         mCloudThread.start();
-        mCloudHandler = new Handler(mCloudThread.getLooper());
+        cloudHandler = new Handler(mCloudThread.getLooper());
 
         // Initialize the doorbell button driver
         try {
@@ -119,7 +119,7 @@ public class DoorbellActivity extends Activity {
         super.onDestroy();
         mCamera.shutDown();
 
-        mCameraThread.quitSafely();
+        cameraThread.quitSafely();
         mCloudThread.quitSafely();
         try {
             button.close();
@@ -172,7 +172,7 @@ public class DoorbellActivity extends Activity {
             log.child("timestamp").setValue(ServerValue.TIMESTAMP);
             log.child("image").setValue(imageStr);
 
-            mCloudHandler.post(new Runnable() {
+            cloudHandler.post(new Runnable() {
                 @Override
                 public void run() {
                     Log.d(TAG, "sending image to cloud vision");
