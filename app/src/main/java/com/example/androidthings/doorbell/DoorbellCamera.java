@@ -52,7 +52,7 @@ public class DoorbellCamera {
     /**
      * An {@link ImageReader} that handles still image capture.
      */
-    private ImageReader mImageReader;
+    private ImageReader imageReader;
 
     // Lazy-loaded singleton, so only one instance of the camera is created.
     private DoorbellCamera() {
@@ -88,9 +88,9 @@ public class DoorbellCamera {
         Log.d(TAG, "Using camera id " + id);
 
         // Initialize the image processor
-        mImageReader = ImageReader.newInstance(IMAGE_WIDTH, IMAGE_HEIGHT,
+        imageReader = ImageReader.newInstance(IMAGE_WIDTH, IMAGE_HEIGHT,
                 ImageFormat.JPEG, MAX_IMAGES);
-        mImageReader.setOnImageAvailableListener(
+        imageReader.setOnImageAvailableListener(
                 imageAvailableListener, backgroundHandler);
 
         // Open the camera resource
@@ -142,7 +142,7 @@ public class DoorbellCamera {
         // Here, we create a CameraCaptureSession for capturing still images.
         try {
             mCameraDevice.createCaptureSession(
-                    Collections.singletonList(mImageReader.getSurface()),
+                    Collections.singletonList(imageReader.getSurface()),
                     mSessionCallback,
                     null);
         } catch (CameraAccessException cae) {
@@ -180,7 +180,7 @@ public class DoorbellCamera {
         try {
             final CaptureRequest.Builder captureBuilder =
                     mCameraDevice.createCaptureRequest(CameraDevice.TEMPLATE_STILL_CAPTURE);
-            captureBuilder.addTarget(mImageReader.getSurface());
+            captureBuilder.addTarget(imageReader.getSurface());
             captureBuilder.set(CaptureRequest.CONTROL_AE_MODE, CaptureRequest.CONTROL_AE_MODE_ON);
             Log.d(TAG, "Session initialized.");
             mCaptureSession.capture(captureBuilder.build(), mCaptureCallback, null);
