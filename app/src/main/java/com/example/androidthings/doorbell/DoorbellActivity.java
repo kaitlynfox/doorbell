@@ -49,7 +49,7 @@ public class DoorbellActivity extends Activity {
     /*
      * Driver for the doorbell button;
      */
-    private Button mButton;
+    private Button button;
 
     /**
      * A {@link Handler} for running Camera tasks in the background.
@@ -103,8 +103,8 @@ public class DoorbellActivity extends Activity {
 
         // Initialize the doorbell button driver
         try {
-            mButton = new Button(BUTTON_GPIO_PIN, Button.LogicState.PRESSED_WHEN_LOW);
-            mButton.setOnButtonEventListener(mButtonCallback);
+            button = new Button(BUTTON_GPIO_PIN, Button.LogicState.PRESSED_WHEN_LOW);
+            button.setOnButtonEventListener(mButtonCallback);
         } catch (IOException e) {
             Log.e(TAG, "button driver error", e);
         }
@@ -122,7 +122,7 @@ public class DoorbellActivity extends Activity {
         mCameraThread.quitSafely();
         mCloudThread.quitSafely();
         try {
-            mButton.close();
+            button.close();
         } catch (IOException e) {
             Log.e(TAG, "button driver error", e);
         }
